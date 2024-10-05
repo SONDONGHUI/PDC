@@ -294,3 +294,31 @@ GDCASMC <- function(data, NP=500, theta_cov, init_cov, adaptive=F, alpha_f,
               W = W))
   
 }
+
+
+
+#=============================#
+#           EXAMPLE           #
+#=============================#
+nclone <- 30
+#alpha_vec <- (0:1000)/1000
+
+theta_cov_temp <- diag(0.04^2, 2,2)/500 #diag(0.1^2, 2,2)
+init_cov_temp <- diag(0.5^2, 2,2)/c(500,250) #diag(0.2^2,2,2)
+#k=10/ init: diag(0.5^2, 2,2)/c(50,25)/ theta: diag(0.04^2, 2,2)/50
+
+
+
+cl <- parallel::makeCluster(5)
+doParallel::registerDoParallel(cl)
+start_time = Sys.time()
+dcasmc30_foreach999 <- foreach(i=1:50, .packages = c("deSolve")) %dopar% {
+  
+  GDCASMC(data = Simulation_Data[[i]], NP=500, theta_cov = theta_cov_temp, init_cov = init_cov_temp,
+          adaptive = T, alpha_f = alpha_vec, resamplethres = 0.5, model = ode_sim1, clone=nclone,
+          tp=fromto,phi = 0.999)  
+  
+}
+asmc30_Time_odesim999 <- Sys.time()-start_time  
+
+parallel::stopCluster(cl)
