@@ -88,3 +88,18 @@ fromto <- seq(from = 0, to=60, length.out = 121)
 
 ode_sim1_dat <- Simulator_ODE(model = ode_sim1, pars = true.pars, tp = fromto)
 ode_sim1_dat_bimod <- Simulator_ODE(model = ode_simbimod, pars = true.pars, tp = fromto)
+
+
+
+
+# STORAGE OF DATA for the simulation studies#
+Simulation_Data <- list()
+num.rep <- 50
+
+set.seed(20230922)
+for (j in 1:num.rep) {
+  
+  Simulation_Data[[j]] <- Simulator_ODE(model = ode_sim1, pars = true.pars, tp = fromto)
+  
+}
+Simulation_Data[[1]]
